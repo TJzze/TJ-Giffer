@@ -98,7 +98,7 @@ function displayContents(contents) {
             content.addEventListener('click', () => {
                 displayContentGifs(content.innerText);
             });
-        });
+        })
 }
 
 async function displayContentGifs(query) {
@@ -122,7 +122,7 @@ async function main() {
             if (query !== "") {
                 searchData(query);
             } 
-            if (query !== "" || !contents.includes(query)) {
+            if (query !== "" && !contents.includes(query)) {
                 contents.shift();
                 contents.push(query);
                 displayContents(contents);  
