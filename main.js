@@ -66,29 +66,52 @@ async function searchData(query) {
     renderer.renderGifs(gifs.data);
 }
 
-function getContent() {
-    return Array.from(document.querySelectorAll('.content'));
+class ContentRenderer {
+    constructor(root) {
+        this.root = root;
+    }
+
+    renderContents(contents) {
+        this.root.innerHTML = contents
+            .map(this._gifToHTML)
+            .join('');
+    }
+
+    _gifToHTML(content) {
+        return `
+            <div class="content-wrapper">
+                <p class="content">
+                    ${content}
+                </p>
+            </div>
+        `;
+    }
 }
 
-async function displayContent(content) {
-    const searchword = content.innerText;
-    const gifs = await DataService.getSearchGifs(searchword);
+function displayContents(contents) {
+    contentRoot = document.querySelector('.searched-content');
+    const render = new ContentRenderer(contentRoot);
+    render.renderContents(contents);
+
+    document
+        .querySelectorAll('.content').forEach(content => {
+            content.addEventListener('click', () => {
+                displayContentGifs(content.innerText);
+            });
+        });
+}
+
+async function displayContentGifs(query) {
+    const gifs = await DataService.getSearchGifs(query);
     const gifsRoot = document.querySelector('.gifs');
     const renderer = new GifRenderer(gifsRoot);
     renderer.renderGifs(gifs.data);
 }
 
-function contentShifter(query) {
-    var search = getContent();
-    if (query !== search[search.length - 1].innerText) {
-        for (let i = 0; i < search.length - 1; i++) {
-            search[i].innerText = search[i+1].innerText;
-        }
-        search[search.length - 1].innerText = query;
-    }
-}
-
 async function main() {
+    var contents = ["Internet Cats", "Meme's", "Typing", "Space", "Rick and Morty"];
+    displayContents(contents);
+
     document
         .getElementById('filter-form')
         .addEventListener('submit', (event) => {
@@ -98,19 +121,17 @@ async function main() {
                 .value;
             if (query !== "") {
                 searchData(query);
-                contentShifter(query);
+            } 
+            if (query !== "" || !contents.includes(query)) {
+                contents.shift();
+                contents.push(query);
+                displayContents(contents);  
             }
         })
 
     document
         .getElementById('trending__button')
         .addEventListener('click', trendingData);
-
-    getContent().forEach(content => {
-        content.addEventListener('click', () => {
-            displayContent(content);
-        });
-    })
 }
 
 window.addEventListener('load', main);
