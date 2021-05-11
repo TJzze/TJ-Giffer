@@ -80,10 +80,12 @@ async function displayContent(content) {
 
 function contentShifter(query) {
     var search = getContent();
-    for (let i = 0; i < search.length - 1; i++) {
-        search[i].innerText = search[i+1].innerText;
+    if (query !== search[search.length - 1].innerText) {
+        for (let i = 0; i < search.length - 1; i++) {
+            search[i].innerText = search[i+1].innerText;
+        }
+        search[search.length - 1].innerText = query;
     }
-    search[search.length - 1].innerText = query;
 }
 
 async function main() {
@@ -105,7 +107,7 @@ async function main() {
         .addEventListener('click', trendingData);
 
     getContent().forEach(content => {
-        content.addEventListener('click', () =>{
+        content.addEventListener('click', () => {
             displayContent(content);
         });
     })
