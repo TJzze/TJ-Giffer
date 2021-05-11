@@ -18,8 +18,9 @@
 
 .searched-content {
 	display: flex;
+	flex-wrap: wrap;
 	margin: 8px 0px;
-	max-width: 100%;
+	max-width: 100vw;
 }
 
 .search-wrapper {
@@ -104,10 +105,4 @@
         justify-content: center;
         align-items: center;
     }
-}
-
-@media (max-width: 350px) {
-    .content-wrapper:nth-child(even) {
-		display: none;
-	}
 }

@@ -78,6 +78,14 @@ async function displayContent(content) {
     renderer.renderGifs(gifs.data);
 }
 
+function contentShifter(query) {
+    var search = getContent();
+    for (let i = 0; i < search.length - 1; i++) {
+        search[i].innerText = search[i+1].innerText;
+    }
+    search[search.length - 1].innerText = query;
+}
+
 async function main() {
     document
         .getElementById('filter-form')
@@ -86,8 +94,10 @@ async function main() {
             const query = document
                 .getElementById('input')
                 .value;
-            searchData(query);
-            var search = getContent();
+            if (query !== "") {
+                searchData(query);
+                contentShifter(query);
+            }
         })
 
     document
